@@ -1,8 +1,10 @@
 const supabase = require('../config/supabase');
 
 exports.markAttendance = async (req, res) => {
-  const { yuvakNoOrMobile } = req.body;
-  const today = new Date().toISOString().split('T')[0];
+  // Use IST (India Standard Time) — Render servers run in UTC
+  const now = new Date();
+  const istOptions = { timeZone: 'Asia/Kolkata' };
+  const today = now.toLocaleDateString('en-CA', istOptions); // YYYY-MM-DD format
 
   if (!yuvakNoOrMobile) {
     return res.status(400).json({ error: 'Yuvak No or Mobile is required' });
@@ -35,8 +37,13 @@ exports.markAttendance = async (req, res) => {
       return res.status(400).json({ error: 'Attendance already marked for today' });
     }
 
-    const now = new Date();
-    const inTime = now.toTimeString().split(' ')[0]; // HH:MM:SS
+    const inTime = now.toLocaleTimeString('en-IN', { 
+      timeZone: 'Asia/Kolkata', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit', 
+      hour12: true 
+    });
 
     // Mark attendance
     const { data: newLog, error: logError } = await supabase
@@ -63,7 +70,7 @@ exports.markAttendance = async (req, res) => {
 
 exports.getAttendanceReport = async (req, res) => {
   const { date } = req.query;
-  const queryDate = date || new Date().toISOString().split('T')[0];
+  const queryDate = date || new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
   try {
     const { data, error } = await supabase
