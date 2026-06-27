@@ -262,7 +262,7 @@ const ManageYuvaks = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
           <div className="bg-card w-full max-w-md rounded-xl shadow-xl animate-fade-in">
             <div className="p-6 border-b border-blue/10 flex justify-between items-center rounded-t-xl">
               <h2 className="text-xl font-heading font-bold text-blue">
@@ -316,7 +316,7 @@ const ManageYuvaks = () => {
       )}
 
       {showUploadModal && (
-        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={(e) => { if (e.target === e.currentTarget) { setShowUploadModal(false); setFile(null); } }}>
           <div className="bg-white w-full max-w-md rounded-xl shadow-xl animate-fade-in border-t-[6px] border-[#0ca678] relative">
             <div className="p-8 pb-6">
               <div className="flex justify-between items-start mb-2">
@@ -370,7 +370,7 @@ const ManageYuvaks = () => {
       )}
 
       {showTerminalModal && (
-        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={(e) => { if (e.target === e.currentTarget) setShowTerminalModal(false); }}>
           <div className="w-full max-w-sm relative flex flex-col gap-4 animate-fade-in">
             <button 
               onClick={() => setShowTerminalModal(false)} 

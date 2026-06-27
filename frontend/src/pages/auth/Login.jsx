@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { Lock, Phone } from 'lucide-react';
+import { Lock, Phone, Eye, EyeOff } from 'lucide-react';
 import bapsLogo from '../../../00001.png';
 import Swal from 'sweetalert2';
 import api from '../../api/axios';
@@ -12,6 +12,7 @@ const Login = () => {
   const [role, setRole] = useState('admin');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -150,17 +151,26 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron"
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-saffron focus:ring-1 focus:ring-saffron pr-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
             </div>
 
             <div className="flex justify-end pt-2">

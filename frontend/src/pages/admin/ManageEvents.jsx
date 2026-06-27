@@ -164,7 +164,7 @@ const ManageEvents = () => {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-blue/50 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
           <div className="bg-card w-full max-w-md rounded-xl shadow-xl overflow-hidden animate-fade-in">
             <div className="p-6 border-b border-blue/10 flex justify-between items-center">
               <h2 className="text-xl font-heading font-bold text-blue">
