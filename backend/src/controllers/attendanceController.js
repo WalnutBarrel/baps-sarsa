@@ -38,7 +38,7 @@ exports.markAttendance = async (req, res) => {
       return res.status(400).json({ error: 'Attendance already marked for today' });
     }
 
-    const inTime = now.toLocaleTimeString('en-IN', { 
+    const inTime = now.toLocaleTimeString('en-US', { 
       timeZone: 'Asia/Kolkata', 
       hour: '2-digit', 
       minute: '2-digit', 

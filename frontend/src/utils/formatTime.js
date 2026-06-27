@@ -2,8 +2,10 @@ export const formatTime = (timeStr) => {
   if (!timeStr) return '-';
   
   // If it already contains AM or PM (from our new backend logic), return it as is
-  if (timeStr.includes('AM') || timeStr.includes('PM')) {
-    return timeStr;
+  const upperTime = timeStr.toUpperCase();
+  if (upperTime.includes('AM') || upperTime.includes('PM')) {
+    // Replace narrow no-break space (U+202F) with standard space if present
+    return timeStr.replace(/\u202F/g, ' ');
   }
 
   try {
