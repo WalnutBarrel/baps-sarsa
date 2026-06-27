@@ -1,6 +1,7 @@
 const supabase = require('../config/supabase');
 
 exports.markAttendance = async (req, res) => {
+  const { yuvakNoOrMobile } = req.body;
   // Use IST (India Standard Time) — Render servers run in UTC
   const now = new Date();
   const istOptions = { timeZone: 'Asia/Kolkata' };

@@ -40,7 +40,7 @@ const UserLayout = () => {
       const reviewedPrasangs = res.data.filter(p => p.status !== 'pending').slice(0, 5);
       setNotifications(reviewedPrasangs);
 
-      const seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
+      const seenIds = JSON.parse(localStorage.getItem(`seenNotificationIds_${user.id}`) || '[]');
       const hasNew = reviewedPrasangs.some(p => !seenIds.includes(p.id));
       setHasUnread(hasNew);
     } catch (err) {
@@ -53,7 +53,7 @@ const UserLayout = () => {
     if (!showNotifications && hasUnread) {
       setHasUnread(false);
       const allIds = notifications.map(n => n.id);
-      localStorage.setItem('seenNotificationIds', JSON.stringify(allIds));
+      localStorage.setItem(`seenNotificationIds_${user.id}`, JSON.stringify(allIds));
     }
   };
 
