@@ -4,7 +4,7 @@ exports.getApprovedPrasangs = async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('prasangs')
-      .select('*, users(full_name, yuvak_no, mobile)')
+      .select('*, users(full_name, yuvak_no)')
       .eq('status', 'approved')
       .order('created_at', { ascending: false });
 
@@ -35,7 +35,7 @@ exports.getPendingPrasangs = async (req, res) => {
   try {
     const { data, error } = await supabase
       .from('prasangs')
-      .select('*, users(full_name, yuvak_no, mobile)')
+      .select('*, users(full_name, yuvak_no)')
       .eq('status', 'pending')
       .order('created_at', { ascending: true });
 

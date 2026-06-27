@@ -1,6 +1,6 @@
 const supabase = require('../config/supabase');
 const bcrypt = require('bcryptjs');
-const xlsx = require('xlsx');
+const ExcelJS = require('exceljs');
 
 exports.getAllYuvaks = async (req, res) => {
   try {
@@ -73,9 +73,11 @@ exports.addYuvak = async (req, res) => {
 
 exports.updateYuvak = async (req, res) => {
   const { id } = req.params;
-  const updates = req.body;
-  delete updates.password_hash; // Security: don't allow direct hash update here
-  delete updates.id;
+  const { yuvak_no, full_name, mobile, dob, photo_url } = req.body;
+  const updates = { yuvak_no, full_name, mobile, dob, photo_url };
+  
+  // Remove undefined keys so we only update provided fields
+  Object.keys(updates).forEach(key => updates[key] === undefined && delete updates[key]);
 
   try {
     const { data, error } = await supabase
@@ -112,13 +114,34 @@ exports.bulkUploadYuvaks = async (req, res) => {
   }
 
   try {
-    const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const records = xlsx.utils.sheet_to_json(sheet);
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(req.file.buffer);
+    const worksheet = workbook.worksheets[0];
+
+    if (!worksheet) {
+      return res.status(400).json({ error: 'File is empty' });
+    }
+
+    const records = [];
+    const headers = [];
+    worksheet.eachRow((row, rowNumber) => {
+      if (rowNumber === 1) {
+        row.eachCell((cell, colNumber) => {
+          headers[colNumber] = cell.value ? cell.value.toString().trim() : '';
+        });
+      } else {
+        const record = {};
+        row.eachCell((cell, colNumber) => {
+          if (headers[colNumber]) {
+            record[headers[colNumber]] = cell.value;
+          }
+        });
+        records.push(record);
+      }
+    });
 
     if (records.length === 0) {
-      return res.status(400).json({ error: 'File is empty' });
+      return res.status(400).json({ error: 'No data found in file' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -132,7 +155,12 @@ exports.bulkUploadYuvaks = async (req, res) => {
       let mobile = row['Mobile'] || row['MOBILE NO.'] || row.mobile;
       let dobRaw = row['DOB'] || row['DATE OF BIRTH'] || row.dob;
       
-      if (mobile) mobile = mobile.toString().trim();
+      if (mobile) {
+         // Handle exceljs parsing mobile as a number or string
+         if (mobile.text) mobile = mobile.text;
+         if (mobile.result) mobile = mobile.result;
+         mobile = mobile.toString().trim();
+      }
 
       if (!full_name || !mobile) {
         errors.push(`Row ${i + 2}: Missing Name or Mobile`);
@@ -143,9 +171,8 @@ exports.bulkUploadYuvaks = async (req, res) => {
       
       let dob = null;
       if (dobRaw) {
-        if (typeof dobRaw === 'number') {
-          // Excel serial date to JS Date
-          dob = new Date(Math.round((dobRaw - 25569) * 86400 * 1000));
+        if (dobRaw instanceof Date) {
+          dob = dobRaw; // exceljs already parsed it
         } else if (typeof dobRaw === 'string') {
           const parts = dobRaw.split('-');
           if (parts.length === 3) {

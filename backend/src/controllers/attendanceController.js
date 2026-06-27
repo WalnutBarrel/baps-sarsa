@@ -11,6 +11,13 @@ exports.markAttendance = async (req, res) => {
     return res.status(400).json({ error: 'Yuvak No or Mobile is required' });
   }
 
+  // Security check: Only admins can mark for others. Regular users must mark for themselves.
+  if (req.user.role !== 'admin') {
+    if (req.user.yuvak_no !== yuvakNoOrMobile && req.user.mobile !== yuvakNoOrMobile) {
+      return res.status(403).json({ error: 'You are only authorized to mark your own attendance.' });
+    }
+  }
+
   try {
     console.log('Marking attendance for:', yuvakNoOrMobile);
     // Find the user

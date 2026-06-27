@@ -11,6 +11,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 
+const helmet = require('helmet');
+
+app.use(helmet());
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -21,7 +24,7 @@ app.use(cors({
   },
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));

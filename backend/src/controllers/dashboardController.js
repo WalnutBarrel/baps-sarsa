@@ -7,7 +7,8 @@ exports.getAdminStats = async (req, res) => {
       .select('id', { count: 'exact', head: true })
       .eq('role', 'user');
 
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
     const { count: todayAttendance, error: attError } = await supabase
       .from('attendance_log')
       .select('id', { count: 'exact', head: true })
