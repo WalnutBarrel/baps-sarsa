@@ -122,10 +122,6 @@ const MarkAttendance = () => {
     startScanner();
   };
 
-  const handleMarkWithMobile = () => {
-    markAttendance(user.mobile);
-  };
-
   return (
     <div className="max-w-lg mx-auto space-y-5 px-4 pb-8">
       {/* Header */}
@@ -200,20 +196,15 @@ const MarkAttendance = () => {
               </ol>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <button 
+            <button 
                 onClick={handleRetry}
                 className="w-full bg-blue text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue/90 transition-colors cursor-pointer shadow-sm"
               >
                 <RefreshCw size={18} /> Retry Camera
               </button>
-              <button 
-                onClick={handleMarkWithMobile}
-                className="w-full bg-saffron text-white py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#d9621a] transition-colors cursor-pointer shadow-sm"
-              >
-                <ShieldCheck size={18} /> Mark Attendance Without Camera
-              </button>
-            </div>
+              <p className="text-xs text-text-secondary text-center leading-relaxed">
+                Can't scan? Contact your <strong>Sabha Admin/Manager</strong> to manually mark your attendance.
+              </p>
           </div>
         )}
 
