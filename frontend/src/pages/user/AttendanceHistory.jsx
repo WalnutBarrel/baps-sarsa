@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import { Clock, CheckCircle } from 'lucide-react';
+import { formatTime } from '../../utils/formatTime';
 
 const AttendanceHistory = () => {
   const [history, setHistory] = useState([]);
@@ -53,7 +54,7 @@ const AttendanceHistory = () => {
                 <div className="text-right">
                   <div className="flex items-center gap-1 text-saffron font-bold text-lg">
                     <Clock size={16} />
-                    {record.in_time}
+                    {formatTime(record.in_time)}
                   </div>
                 </div>
               </div>

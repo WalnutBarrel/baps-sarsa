@@ -3,6 +3,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import api from '../../api/axios';
 import { AuthContext } from '../../context/AuthContext';
 import { CheckCircle, XCircle, Camera, CameraOff, RefreshCw, ScanLine, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { formatTime } from '../../utils/formatTime';
 
 const MarkAttendance = () => {
   const { user } = useContext(AuthContext);
@@ -219,7 +220,7 @@ const MarkAttendance = () => {
               <p className="text-base text-text-primary font-semibold">{attendeeName}</p>
               {checkInTime && (
                 <p className="text-sm text-text-secondary mt-1">
-                  Checked in at <span className="font-medium text-blue">{checkInTime}</span>
+                  Checked in at <span className="font-medium text-blue">{formatTime(checkInTime)}</span>
                 </p>
               )}
             </div>
