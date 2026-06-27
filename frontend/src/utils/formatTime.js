@@ -7,19 +7,39 @@ export const formatTime = (timeStr) => {
   }
 
   try {
-    // Parse the 24-hour format string like "16:51:52"
-    const [hours, minutes, seconds] = timeStr.split(':');
-    let h = parseInt(hours, 10);
+    // Old records are stored in UTC format like "16:51:52"
+    // We need to add 5 hours and 30 minutes to convert UTC to IST
+    const [hoursStr, minutesStr, secondsStr] = timeStr.split(':');
+    let h = parseInt(hoursStr, 10);
+    let m = parseInt(minutesStr, 10);
+    let s = secondsStr ? parseInt(secondsStr, 10) : 0;
+    
+    // Add 5 hours and 30 minutes (IST offset)
+    m += 30;
+    if (m >= 60) {
+      m -= 60;
+      h += 1;
+    }
+    h += 5;
+    
+    // Wrap around 24 hours
+    if (h >= 24) {
+      h -= 24;
+    }
+    
+    // Format to 12-hour AM/PM
     const ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12;
     h = h ? h : 12; // the hour '0' should be '12'
     
     const paddedH = h.toString().padStart(2, '0');
+    const paddedM = m.toString().padStart(2, '0');
     
-    if (seconds) {
-      return `${paddedH}:${minutes}:${seconds} ${ampm}`;
+    if (secondsStr) {
+      const paddedS = s.toString().padStart(2, '0');
+      return `${paddedH}:${paddedM}:${paddedS} ${ampm}`;
     }
-    return `${paddedH}:${minutes} ${ampm}`;
+    return `${paddedH}:${paddedM} ${ampm}`;
   } catch (error) {
     // Fallback just in case
     return timeStr;
