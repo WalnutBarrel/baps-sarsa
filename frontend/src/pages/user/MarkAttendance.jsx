@@ -31,7 +31,7 @@ const MarkAttendance = () => {
     try {
       const res = await api.post('/attendance/mark', { yuvakNoOrMobile: identifier });
       setAttendeeName(res.data.log.full_name);
-      setCheckInTime(res.data.log.in_time);
+      setCheckInTime(res.data.log.created_at);
       setStatus('success');
       setMessage(`Jay Swaminarayan! Attendance marked successfully.`);
     } catch (err) {

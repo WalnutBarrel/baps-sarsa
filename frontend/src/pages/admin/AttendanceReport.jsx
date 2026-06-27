@@ -35,7 +35,7 @@ const AttendanceReport = () => {
       'Yuvak No': r.yuvak_no,
       'Full Name': r.full_name,
       'Mobile': r.mobile,
-      'In Time': formatTime(r.in_time)
+      'In Time': formatTime(r.created_at)
     })));
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Attendance');
@@ -78,7 +78,7 @@ const AttendanceReport = () => {
       autoTable(doc, {
         startY: 42,
         head: [['Yuvak No', 'Full Name', 'Mobile', 'In Time']],
-        body: report.map(r => [r.yuvak_no || '-', r.full_name, r.mobile, formatTime(r.in_time)]),
+        body: report.map(r => [r.yuvak_no || '-', r.full_name, r.mobile, formatTime(r.created_at)]),
         theme: 'grid',
         headStyles: { fillColor: [13, 59, 102] }, // Sarsa blue
         bodyStyles: { textColor: [0, 0, 0] } // Black text
@@ -146,7 +146,7 @@ const AttendanceReport = () => {
                     <td className="p-4 font-medium text-blue">{record.yuvak_no || '-'}</td>
                     <td className="p-4 text-text-primary">{record.full_name}</td>
                     <td className="p-4 text-text-secondary">{record.mobile}</td>
-                    <td className="p-4 font-mono text-sm text-green-600">{formatTime(record.in_time)}</td>
+                    <td className="p-4 font-mono text-sm text-green-600">{formatTime(record.created_at)}</td>
                   </tr>
                 ))
               )}

@@ -54,7 +54,7 @@ const AttendanceHistory = () => {
                 <div className="text-right">
                   <div className="flex items-center gap-1 text-saffron font-bold text-lg">
                     <Clock size={16} />
-                    {formatTime(record.in_time)}
+                    {formatTime(record.created_at)}
                   </div>
                 </div>
               </div>

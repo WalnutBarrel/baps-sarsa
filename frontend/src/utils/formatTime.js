@@ -1,49 +1,21 @@
-export const formatTime = (timeStr) => {
-  if (!timeStr) return '-';
+export const formatTime = (dateString) => {
+  if (!dateString) return '-';
   
-  // If it already contains AM or PM (from our new backend logic), return it as is
-  const upperTime = timeStr.toUpperCase();
-  if (upperTime.includes('AM') || upperTime.includes('PM')) {
-    // Replace narrow no-break space (U+202F) with standard space if present
-    return timeStr.replace(/\u202F/g, ' ');
-  }
-
   try {
-    // Old records are stored in UTC format like "16:51:52"
-    // We need to add 5 hours and 30 minutes to convert UTC to IST
-    const [hoursStr, minutesStr, secondsStr] = timeStr.split(':');
-    let h = parseInt(hoursStr, 10);
-    let m = parseInt(minutesStr, 10);
-    let s = secondsStr ? parseInt(secondsStr, 10) : 0;
-    
-    // Add 5 hours and 30 minutes (IST offset)
-    m += 30;
-    if (m >= 60) {
-      m -= 60;
-      h += 1;
-    }
-    h += 5;
-    
-    // Wrap around 24 hours
-    if (h >= 24) {
-      h -= 24;
+    // If it's an ISO timestamp (like created_at), parse it directly
+    const d = new Date(dateString);
+    if (!isNaN(d.getTime())) {
+      return d.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
     }
     
-    // Format to 12-hour AM/PM
-    const ampm = h >= 12 ? 'PM' : 'AM';
-    h = h % 12;
-    h = h ? h : 12; // the hour '0' should be '12'
-    
-    const paddedH = h.toString().padStart(2, '0');
-    const paddedM = m.toString().padStart(2, '0');
-    
-    if (secondsStr) {
-      const paddedS = s.toString().padStart(2, '0');
-      return `${paddedH}:${paddedM}:${paddedS} ${ampm}`;
-    }
-    return `${paddedH}:${paddedM} ${ampm}`;
+    // Fallback if someone passes a raw string that isn't a date
+    return dateString;
   } catch (error) {
-    // Fallback just in case
-    return timeStr;
+    return dateString;
   }
 };
