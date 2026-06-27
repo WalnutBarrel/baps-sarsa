@@ -19,7 +19,6 @@ exports.markAttendance = async (req, res) => {
   }
 
   try {
-    console.log('Marking attendance for:', yuvakNoOrMobile);
     // Find the user
     const { data: user, error: userError } = await supabase
       .from('users')
@@ -27,7 +26,7 @@ exports.markAttendance = async (req, res) => {
       .or(`yuvak_no.ilike.${yuvakNoOrMobile},mobile.eq.${yuvakNoOrMobile}`)
       .single();
 
-    console.log('User found:', user, 'Error:', userError);
+
 
     if (userError || !user) {
       return res.status(404).json({ error: 'Yuvak not found' });

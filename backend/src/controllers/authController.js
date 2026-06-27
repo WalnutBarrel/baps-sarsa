@@ -60,6 +60,10 @@ exports.changePassword = async (req, res) => {
     return res.status(400).json({ error: 'Old and new passwords are required' });
   }
 
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
+  }
+
   try {
     const { data: user, error } = await supabase
       .from('users')
@@ -95,6 +99,10 @@ exports.resetPassword = async (req, res) => {
 
   if (!mobile || !dob || !newPassword) {
     return res.status(400).json({ error: 'Mobile, Date of Birth, and New Password are required' });
+  }
+
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'Password must be at least 8 characters' });
   }
 
   try {
